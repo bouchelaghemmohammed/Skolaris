@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} une classe – Skolaris{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+  <a href="{{ url_for('classes') }}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0"><i class="bi bi-door-open-fill me-2"></i>{{ action }} une classe</h2>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width:480px">
+  <div class="card-body">
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label fw-semibold">Nom de la classe *</label>
+          <input type="text" name="nom" class="form-control"
+                 value="{{ classe.nom if classe else '' }}"
+                 placeholder="Ex : 3ème A" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Niveau *</label>
+          <input type="text" name="niveau" class="form-control"
+                 value="{{ classe.niveau if classe else '' }}"
+                 placeholder="Ex : Troisième" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Année scolaire *</label>
+          <input type="text" name="annee_scolaire" class="form-control"
+                 value="{{ classe.annee_scolaire if classe else '2025-2026' }}"
+                 placeholder="2025-2026" required>
+        </div>
+      </div>
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-warning">
+          <i class="bi bi-check-lg me-1"></i>{{ action }}
+        </button>
+        <a href="{{ url_for('classes') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

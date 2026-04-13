@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Bulletin – {{ eleve.prenom }} {{ eleve.nom }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+  <a href="{{ url_for('eleves') }}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0"><i class="bi bi-file-text me-2"></i>Bulletin de notes</h2>
+</div>
+
+<!-- Bulletin header -->
+<div class="card border-0 shadow-sm mb-4" style="max-width:700px">
+  <div class="card-header bg-primary text-white">
+    <div class="row align-items-center">
+      <div class="col">
+        <h5 class="mb-0">{{ eleve.prenom }} {{ eleve.nom }}</h5>
+        <small>Matricule : {{ eleve.matricule }} &nbsp;|&nbsp;
+          Classe : {{ eleve.classe.nom if eleve.classe else '–' }}
+        </small>
+      </div>
+      <div class="col-auto">
+        <!-- Trimestre selector -->
+        <div class="btn-group btn-group-sm">
+          {% for t in [1, 2, 3] %}
+          <a href="{{ url_for('bulletin', eleve_id=eleve.id, trimestre=t) }}"
+             class="btn {% if trimestre == t %}btn-light{% else %}btn-outline-light{% endif %}">
+            T{{ t }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    {% if notes %}
+    <table class="table mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Matière</th>
+          <th>Coefficient</th>
+          <th>Note / 20</th>
+          <th>Points</th>
+          <th>Appréciation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for n in notes %}
+        <tr>
+          <td>{{ n.matiere.nom }}</td>
+          <td>{{ n.matiere.coefficient }}</td>
+          <td>
+            <span class="fw-bold {% if n.valeur >= 10 %}text-success{% else %}text-danger{% endif %}">
+              {{ '%.2f'|format(n.valeur) }}
+            </span>
+          </td>
+          <td>{{ '%.2f'|format(n.valeur * n.matiere.coefficient) }}</td>
+          <td>
+            {% if n.valeur >= 16 %}Très bien
+            {% elif n.valeur >= 14 %}Bien
+            {% elif n.valeur >= 12 %}Assez bien
+            {% elif n.valeur >= 10 %}Passable
+            {% else %}Insuffisant{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="table-light fw-bold">
+        <tr>
+          <td colspan="3" class="text-end">Moyenne générale :</td>
+          <td colspan="2">
+            <span class="fs-5 {% if moyenne >= 10 %}text-success{% else %}text-danger{% endif %}">
+              {{ '%.2f'|format(moyenne) }} / 20
+            </span>
+            {% if moyenne >= 16 %}<span class="badge bg-success ms-2">Très bien</span>
+            {% elif moyenne >= 14 %}<span class="badge bg-primary ms-2">Bien</span>
+            {% elif moyenne >= 12 %}<span class="badge bg-info ms-2">Assez bien</span>
+            {% elif moyenne >= 10 %}<span class="badge bg-warning ms-2">Passable</span>
+            {% else %}<span class="badge bg-danger ms-2">Insuffisant</span>{% endif %}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    {% else %}
+    <div class="text-center py-4 text-muted">
+      <i class="bi bi-inbox d-block mb-2 fs-2"></i>
+      Aucune note pour ce trimestre.
+    </div>
+    {% endif %}
+  </div>
+  <div class="card-footer text-muted small">
+    Trimestre {{ trimestre }} – Année scolaire
+    {{ notes[0].annee_scolaire if notes else '2025-2026' }}
+  </div>
+</div>
+
+<a href="{{ url_for('note_ajouter') }}" class="btn btn-secondary">
+  <i class="bi bi-pencil-square me-1"></i>Saisir une note
+</a>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Classes – Skolaris{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-door-open-fill me-2"></i>Classes</h2>
+  <a href="{{ url_for('classe_ajouter') }}" class="btn btn-warning">
+    <i class="bi bi-plus-circle-fill me-1"></i>Ajouter
+  </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-0">
+    {% if classes %}
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Nom</th>
+            <th>Niveau</th>
+            <th>Année scolaire</th>
+            <th>Nb élèves</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in classes %}
+          <tr>
+            <td><strong>{{ c.nom }}</strong></td>
+            <td>{{ c.niveau }}</td>
+            <td>{{ c.annee_scolaire }}</td>
+            <td><span class="badge bg-primary rounded-pill">{{ c.eleves|length }}</span></td>
+            <td class="text-end">
+              <a href="{{ url_for('classe_modifier', id=c.id) }}"
+                 class="btn btn-sm btn-outline-warning me-1">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form action="{{ url_for('classe_supprimer', id=c.id) }}" method="post" class="d-inline"
+                    onsubmit="return confirm('Supprimer cette classe ?')">
+                <button class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+      Aucune classe. <a href="{{ url_for('classe_ajouter') }}">Créer la première classe</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

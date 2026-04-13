@@ -1,0 +1,43 @@
+/* ── Skolaris – Custom styles ── */
+
+body {
+  background-color: #f5f6fa;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+/* Stat icon containers on dashboard */
+.stat-icon {
+  min-width: 64px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pink badge for female gender */
+.bg-pink {
+  background-color: #f48fb1 !important;
+}
+
+/* Table improvements */
+.table > :not(caption) > * > * {
+  vertical-align: middle;
+}
+
+/* Card hover lift effect */
+.card {
+  transition: box-shadow 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Subtle page background variation */
+main.container-fluid {
+  max-width: 1400px;
+}

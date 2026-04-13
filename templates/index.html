@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord – Skolaris{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col">
+    <h2><i class="bi bi-speedometer2 me-2"></i>Tableau de bord</h2>
+    <p class="text-muted">Année scolaire 2025-2026</p>
+  </div>
+</div>
+
+<!-- Stats cards -->
+<div class="row g-4 mb-5">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="stat-icon bg-primary-subtle rounded-3 p-3">
+          <i class="bi bi-people-fill text-primary fs-2"></i>
+        </div>
+        <div>
+          <div class="fs-1 fw-bold lh-1">{{ nb_eleves }}</div>
+          <div class="text-muted">Élèves inscrits</div>
+        </div>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <a href="{{ url_for('eleves') }}" class="btn btn-sm btn-outline-primary w-100">
+          Gérer les élèves <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="stat-icon bg-success-subtle rounded-3 p-3">
+          <i class="bi bi-person-badge-fill text-success fs-2"></i>
+        </div>
+        <div>
+          <div class="fs-1 fw-bold lh-1">{{ nb_enseignants }}</div>
+          <div class="text-muted">Enseignants</div>
+        </div>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <a href="{{ url_for('enseignants') }}" class="btn btn-sm btn-outline-success w-100">
+          Gérer les enseignants <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="stat-icon bg-warning-subtle rounded-3 p-3">
+          <i class="bi bi-door-open-fill text-warning fs-2"></i>
+        </div>
+        <div>
+          <div class="fs-1 fw-bold lh-1">{{ nb_classes }}</div>
+          <div class="text-muted">Classes</div>
+        </div>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <a href="{{ url_for('classes') }}" class="btn btn-sm btn-outline-warning w-100">
+          Gérer les classes <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="stat-icon bg-info-subtle rounded-3 p-3">
+          <i class="bi bi-book-fill text-info fs-2"></i>
+        </div>
+        <div>
+          <div class="fs-1 fw-bold lh-1">{{ nb_matieres }}</div>
+          <div class="text-muted">Matières</div>
+        </div>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <a href="{{ url_for('matieres') }}" class="btn btn-sm btn-outline-info w-100">
+          Gérer les matières <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<div class="row">
+  <div class="col-12">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold">
+        <i class="bi bi-lightning-charge-fill text-warning me-1"></i>Actions rapides
+      </div>
+      <div class="card-body">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{{ url_for('eleve_ajouter') }}" class="btn btn-primary">
+            <i class="bi bi-person-plus-fill me-1"></i>Nouvel élève
+          </a>
+          <a href="{{ url_for('enseignant_ajouter') }}" class="btn btn-success">
+            <i class="bi bi-person-fill-add me-1"></i>Nouvel enseignant
+          </a>
+          <a href="{{ url_for('classe_ajouter') }}" class="btn btn-warning">
+            <i class="bi bi-plus-circle-fill me-1"></i>Nouvelle classe
+          </a>
+          <a href="{{ url_for('matiere_ajouter') }}" class="btn btn-info text-white">
+            <i class="bi bi-book-half me-1"></i>Nouvelle matière
+          </a>
+          <a href="{{ url_for('note_ajouter') }}" class="btn btn-secondary">
+            <i class="bi bi-pencil-square me-1"></i>Saisir une note
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

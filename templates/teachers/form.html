@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} un enseignant – Skolaris{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+  <a href="{{ url_for('enseignants') }}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0"><i class="bi bi-person-badge-fill me-2"></i>{{ action }} un enseignant</h2>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width:640px">
+  <div class="card-body">
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Matricule *</label>
+          <input type="text" name="matricule" class="form-control"
+                 value="{{ enseignant.matricule if enseignant else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Genre *</label>
+          <select name="genre" class="form-select" required>
+            <option value="M" {% if not enseignant or enseignant.genre == 'M' %}selected{% endif %}>Masculin</option>
+            <option value="F" {% if enseignant and enseignant.genre == 'F' %}selected{% endif %}>Féminin</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Nom *</label>
+          <input type="text" name="nom" class="form-control"
+                 value="{{ enseignant.nom if enseignant else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Prénom *</label>
+          <input type="text" name="prenom" class="form-control"
+                 value="{{ enseignant.prenom if enseignant else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Date de naissance</label>
+          <input type="date" name="date_naissance" class="form-control"
+                 value="{{ enseignant.date_naissance.isoformat() if enseignant and enseignant.date_naissance else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Téléphone</label>
+          <input type="tel" name="telephone" class="form-control"
+                 value="{{ enseignant.telephone if enseignant else '' }}">
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Email</label>
+          <input type="email" name="email" class="form-control"
+                 value="{{ enseignant.email if enseignant else '' }}">
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-check-lg me-1"></i>{{ action }}
+        </button>
+        <a href="{{ url_for('enseignants') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

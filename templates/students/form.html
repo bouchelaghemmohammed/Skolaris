@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} un élève – Skolaris{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+  <a href="{{ url_for('eleves') }}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0"><i class="bi bi-person-fill me-2"></i>{{ action }} un élève</h2>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width:640px">
+  <div class="card-body">
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Matricule *</label>
+          <input type="text" name="matricule" class="form-control"
+                 value="{{ eleve.matricule if eleve else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Genre *</label>
+          <select name="genre" class="form-select" required>
+            <option value="M" {% if not eleve or eleve.genre == 'M' %}selected{% endif %}>Masculin</option>
+            <option value="F" {% if eleve and eleve.genre == 'F' %}selected{% endif %}>Féminin</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Nom *</label>
+          <input type="text" name="nom" class="form-control"
+                 value="{{ eleve.nom if eleve else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Prénom *</label>
+          <input type="text" name="prenom" class="form-control"
+                 value="{{ eleve.prenom if eleve else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Date de naissance</label>
+          <input type="date" name="date_naissance" class="form-control"
+                 value="{{ eleve.date_naissance.isoformat() if eleve and eleve.date_naissance else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Classe</label>
+          <select name="classe_id" class="form-select">
+            <option value="">— Aucune —</option>
+            {% for c in classes %}
+            <option value="{{ c.id }}"
+              {% if eleve and eleve.classe_id == c.id %}selected{% endif %}>
+              {{ c.nom }} ({{ c.niveau }})
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Adresse</label>
+          <input type="text" name="adresse" class="form-control"
+                 value="{{ eleve.adresse if eleve else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Téléphone parent</label>
+          <input type="tel" name="telephone_parent" class="form-control"
+                 value="{{ eleve.telephone_parent if eleve else '' }}">
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-lg me-1"></i>{{ action }}
+        </button>
+        <a href="{{ url_for('eleves') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
