@@ -50,17 +50,11 @@ Skolaris/
 git clone https://github.com/bouchelaghemmohammed/Skolaris.git
 cd Skolaris
 
-# 2. Basculez sur la branche main
-git checkout main
+# 2. Basculez sur la branche dev
+git checkout dev
 
-# 3. Récupérez les dernières modifications
-git fetch origin
-
-# 4. Fusionnez la branche du projet
-git merge origin/copilot/create-complete-school-management-project
-
-# 5. Poussez les modifications sur GitHub
-git push origin main
+# 3. Poussez les modifications sur GitHub
+git push origin dev
 ```
 
 ---
