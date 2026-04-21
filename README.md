@@ -1,4 +1,4 @@
-Skolaris — Secion Horaires 
+Skolaris - Secion Horaires 
 
 Module de gestion des horaires et de l'emploi du temps pour la plateforme scolaire **Skolaris**.
 
