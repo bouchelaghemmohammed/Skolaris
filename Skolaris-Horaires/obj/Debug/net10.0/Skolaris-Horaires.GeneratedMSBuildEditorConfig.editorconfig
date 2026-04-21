@@ -1,0 +1,91 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Skolaris_Horaires
+build_property.RootNamespace = Skolaris_Horaires
+build_property.ProjectDir = C:\Users\Utilisateur\source\repos\Skolaris-Horaires\Skolaris-Horaires\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Utilisateur\source\repos\Skolaris-Horaires\Skolaris-Horaires
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Horaires/GrilleHebdomadaire.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb3JhaXJlc1xHcmlsbGVIZWJkb21hZGFpcmUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Pages/NotFound.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RGb3VuZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Pages/Weather.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/GrilleHebdomadaire.razor]
+build_metadata.AdditionalFiles.TargetPath = R3JpbGxlSGViZG9tYWRhaXJlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Pages/Horaires/Cours.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9yYWlyZXNcQ291cnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Pages/Horaires/EmploiDuTempsAdmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9yYWlyZXNcRW1wbG9pRHVUZW1wc0FkbWluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Pages/Horaires/EmploiDuTempsEleve.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9yYWlyZXNcRW1wbG9pRHVUZW1wc0VsZXZlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Pages/Horaires/EmploiDuTempsEnseignant.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9yYWlyZXNcRW1wbG9pRHVUZW1wc0Vuc2VpZ25hbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-0d81qemafp
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-zcje52al0r
+
+[C:/Users/Utilisateur/source/repos/Skolaris-Horaires/Skolaris-Horaires/Components/Layout/ReconnectModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcUmVjb25uZWN0TW9kYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-gvfan6h8s7

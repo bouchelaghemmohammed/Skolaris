@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "YBBKlL5hETc=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Utilisateur\\source\\repos\\Skolaris-Horaires\\Skolaris-Horaires\\Skolaris-Horaires.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Utilisateur\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.3\\microsoft.aspnetcore.app.internal.assets.10.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

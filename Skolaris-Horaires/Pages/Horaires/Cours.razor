@@ -1,0 +1,220 @@
+@page "/admin/cours"
+@using Skolaris.Models
+@using Skolaris.Services
+@inject ICoursService CoursService
+
+<h3 class="mb-4">Catalogue de cours</h3>
+
+@* Barre d'actions *@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <input class="form-control w-auto" placeholder="Rechercher un cours..." 
+           @bind="searchTerm" @bind:event="oninput" style="min-width:250px" />
+    <button class="btn btn-primary" @onclick="OpenCreateModal">+ Nouveau cours</button>
+</div>
+
+@*Tableau  *@
+@if (coursList is null)
+{
+    <p>Chargement...</p>
+}
+else if (!FilteredCours.Any())
+{
+    <div class="alert alert-info">Aucun cours trouvé.</div>
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Code</th>
+                <th>Nom</th>
+                <th>Programme</th>
+                <th>Niveau</th>
+                <th>Heures</th>
+                <th style="width:130px">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in FilteredCours)
+            {
+                <tr>
+                    <td><code>@c.Code</code></td>
+                    <td>@c.Nom</td>
+                    <td>@(programmes.FirstOrDefault(p => p.Id == c.ProgrammeId)?.Nom ?? "—")</td>
+                    <td>@(niveaux.FirstOrDefault(n => n.Id == c.NiveauId)?.Nom ?? "—")</td>
+                    <td>@c.HeuresTotal h</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary me-1" @onclick="() => OpenEditModal(c)">Modifier</button>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(c)">Supprimer</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@*Créer / Modifier *@
+@if (showModal)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,0.4)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(editingCours.Id == 0 ? "Nouveau cours" : "Modifier le cours")</h5>
+                    <button class="btn-close" @onclick="CloseModal" />
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Code</label>
+                        <input class="form-control" @bind="editingCours.Code" placeholder="ex: INF-101" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom <span class="text-danger">*</span></label>
+                        <input class="form-control" @bind="editingCours.Nom" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" @bind="editingCours.Description" rows="2" />
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Programme <span class="text-danger">*</span></label>
+                            <select class="form-select" @bind="editingCours.ProgrammeId">
+                                <option value="0">— Choisir —</option>
+                                @foreach (var p in programmes)
+                                {
+                                    <option value="@p.Id">@p.Nom</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Niveau <span class="text-danger">*</span></label>
+                            <select class="form-select" @bind="editingCours.NiveauId">
+                                <option value="0">— Choisir —</option>
+                                @foreach (var n in niveaux)
+                                {
+                                    <option value="@n.Id">@n.Nom</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Heures totales</label>
+                        <input type="number" class="form-control" @bind="editingCours.HeuresTotal" min="1" />
+                    </div>
+                    @if (!string.IsNullOrEmpty(modalError))
+                    {
+                        <div class="alert alert-danger py-2">@modalError</div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Annuler</button>
+                    <button class="btn btn-primary" @onclick="SaveCours">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* Confirmation suppression *@
+@if (deletingCours is not null)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,0.4)">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <p>Supprimer le cours <strong>@deletingCours.Nom</strong> ?</p>
+                    <button class="btn btn-danger me-2" @onclick="DeleteConfirmed">Oui, supprimer</button>
+                    <button class="btn btn-secondary" @onclick="() => deletingCours = null">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Skolaris.Models.Cours>?    coursList;
+    private List<Niveau>    niveaux    = new();
+    private List<Programme> programmes = new();
+
+    private string searchTerm  = "";
+    private bool   showModal   = false;
+    private string modalError  = "";
+    private Skolaris.Models.Cours  editingCours = new();
+    private Skolaris.Models.Cours? deletingCours;
+
+    private IEnumerable<Skolaris.Models.Cours> FilteredCours => coursList?
+        .Where(c => string.IsNullOrWhiteSpace(searchTerm)
+                    || c.Nom.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+                    || (c.Code?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false))
+        ?? Enumerable.Empty<Skolaris.Models.Cours>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        coursList  = await CoursService.GetAllCoursAsync();
+        niveaux    = await CoursService.GetNiveauxAsync();
+        programmes = await CoursService.GetProgrammesAsync();
+    }
+
+    private void OpenCreateModal()
+    {
+        editingCours = new Skolaris.Models.Cours();
+        modalError   = "";
+        showModal    = true;
+    }
+
+    private void OpenEditModal(Skolaris.Models.Cours c)
+    {
+        // Copie pour ne pas modifier la liste directement
+        editingCours = new Skolaris.Models.Cours
+        {
+            Id = c.Id, Nom = c.Nom, Code = c.Code,
+            Description = c.Description,
+            NiveauId = c.NiveauId, ProgrammeId = c.ProgrammeId,
+            HeuresTotal = c.HeuresTotal
+        };
+        modalError = "";
+        showModal  = true;
+    }
+
+    private void CloseModal() => showModal = false;
+
+    private async Task SaveCours()
+    {
+        if (string.IsNullOrWhiteSpace(editingCours.Nom))
+        {
+            modalError = "Le nom du cours est obligatoire.";
+            return;
+        }
+        if (editingCours.ProgrammeId == 0 || editingCours.NiveauId == 0)
+        {
+            modalError = "Programme et niveau sont obligatoires.";
+            return;
+        }
+
+        if (editingCours.Id == 0)
+            await CoursService.CreateCoursAsync(editingCours);
+        else
+            await CoursService.UpdateCoursAsync(editingCours);
+
+        showModal = false;
+        await LoadData();
+    }
+
+    private void ConfirmDelete(Skolaris.Models.Cours c) => deletingCours = c;
+
+    private async Task DeleteConfirmed()
+    {
+        if (deletingCours is not null)
+        {
+            await CoursService.DeleteCoursAsync(deletingCours.Id);
+            deletingCours = null;
+            await LoadData();
+        }
+    }
+}

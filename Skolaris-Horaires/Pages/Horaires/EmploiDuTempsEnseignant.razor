@@ -1,0 +1,90 @@
+@page "/enseignant/emploi-du-temps"
+@using Skolaris.Models
+@using Skolaris.Services
+@using Skolaris_Horaires.Components.Horaires
+@inject IEmploiDuTempsService EdtService
+
+<h3 class="mb-1">Mes créneaux</h3>
+<p class="text-muted mb-4">Votre emploi du temps personnel, filtré par vos cours assignés.</p>
+
+@if (creneaux is null)
+{
+    <p>Chargement...</p>
+}
+else if (!creneaux.Any())
+{
+    <div class="alert alert-info">Aucun créneau assigné cette semaine.</div>
+}
+else
+{
+    @* Résumé enseignant *@
+    <div class="row mb-3 g-2">
+        <div class="col-auto">
+            <div class="card text-center px-3 py-2 border-success">
+                <div class="fs-4 fw-bold text-success">@creneaux.Count</div>
+                <div class="small text-muted">Séances</div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card text-center px-3 py-2">
+                <div class="fs-4 fw-bold">@TotalHeures</div>
+                <div class="small text-muted">Heures / sem.</div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card text-center px-3 py-2">
+                <div class="fs-4 fw-bold">@GroupesDistincts</div>
+                <div class="small text-muted">Groupe(s)</div>
+            </div>
+        </div>
+    </div>
+
+    <GrilleHebdomadaire Creneaux="creneaux" ShowAdminActions="false" />
+
+    @* Liste texte en bas *@
+    <h6 class="mt-4 mb-2">Détail des séances</h6>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr><th>Jour</th><th>Cours</th><th>Groupe</th><th>Horaire</th><th>Salle</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var c in creneaux.OrderBy(c => c.JourSemaine).ThenBy(c => c.HeureDebut))
+            {
+                <tr>
+                    <td>@JourLabels[c.JourSemaine]</td>
+                    <td>@c.CoursOffert?.Cours?.Nom</td>
+                    <td><span class="badge bg-secondary">@c.CoursOffert?.Groupe?.Nom</span></td>
+                    <td>@c.HeureDebut.ToString("HH:mm") – @c.HeureFin.ToString("HH:mm")</td>
+                    <td>@(c.Salle ?? "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Creneau>? creneaux;
+
+    private const int EnseignantIdDemo = 1;
+
+    private static readonly Dictionary<DayOfWeek, string> JourLabels = new()
+    {
+        [DayOfWeek.Monday]    = "Lundi",
+        [DayOfWeek.Tuesday]   = "Mardi",
+        [DayOfWeek.Wednesday] = "Mercredi",
+        [DayOfWeek.Thursday]  = "Jeudi",
+        [DayOfWeek.Friday]    = "Vendredi",
+    };
+
+    private double TotalHeures => creneaux?
+        .Sum(c => (c.HeureFin - c.HeureDebut).TotalHours) ?? 0;
+
+    private int GroupesDistincts => creneaux?
+        .Select(c => c.CoursOffert?.GroupeId)
+        .Distinct().Count() ?? 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        creneaux = await EdtService.GetCreneauxParEnseignantAsync(EnseignantIdDemo);
+    }
+}

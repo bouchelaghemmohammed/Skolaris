@@ -1,0 +1,47 @@
+@page "/eleve/emploi-du-temps"
+@using Skolaris.Models
+@using Skolaris.Services
+@using Skolaris_Horaires.Components.Horaires
+@inject IEmploiDuTempsService EdtService
+
+<h3 class="mb-1">Mon emploi du temps</h3>
+<p class="text-muted mb-4">Vos créneaux pour la semaine, filtrés selon votre groupe.</p>
+
+@if (creneaux is null)
+{
+    <p>Chargement...</p>
+}
+else if (!creneaux.Any())
+{
+    <div class="alert alert-info">Aucun créneau trouvé pour votre groupe.</div>
+}
+else
+{
+    @* Résumé rapide *@
+    <div class="row mb-3 g-2">
+        <div class="col-auto">
+            <div class="card text-center px-3 py-2 border-primary">
+                <div class="fs-4 fw-bold text-primary">@creneaux.Count</div>
+                <div class="small text-muted">Créneaux</div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="card text-center px-3 py-2">
+                <div class="fs-4 fw-bold">@creneaux.Select(c => c.CoursOffertId).Distinct().Count()</div>
+                <div class="small text-muted">Cours</div>
+            </div>
+        </div>
+    </div>
+
+    <GrilleHebdomadaire Creneaux="creneaux" ShowAdminActions="false" />
+}
+
+@code {
+    private List<Creneau>? creneaux;
+    private const int GroupeIdDemo = 1; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        creneaux = await EdtService.GetCreneauxParGroupeAsync(GroupeIdDemo);
+    }
+}

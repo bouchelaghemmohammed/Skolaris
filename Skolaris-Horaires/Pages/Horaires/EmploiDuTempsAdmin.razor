@@ -1,0 +1,193 @@
+@page "/admin/emploi-du-temps"
+@using Skolaris.Models
+@using Skolaris.Services
+@using Skolaris_Horaires.Components.Horaires
+@inject IEmploiDuTempsService EdtService
+
+<h3 class="mb-1">Emploi du temps — Administration</h3>
+<p class="text-muted mb-4">Gérez les créneaux de tous les cours offerts.</p>
+
+@*Filtres*@
+<div class="d-flex gap-3 mb-3 flex-wrap">
+    <div>
+        <label class="form-label mb-1">Cours offert</label>
+        <select class="form-select" style="min-width:220px" @bind="filterCoursOffertId">
+            <option value="0">— Tous —</option>
+            @foreach (var co in coursOfferts)
+            {
+                <option value="@co.Id">@co.Cours?.Nom — @co.Groupe?.Nom</option>
+            }
+        </select>
+    </div>
+    <div class="align-self-end">
+        <button class="btn btn-primary" @onclick="OpenCreateModal">+ Nouveau créneau</button>
+    </div>
+</div>
+
+@* Grille *@
+<GrilleHebdomadaire Creneaux="@FilteredCreneaux"
+                    ShowAdminActions="true"
+                    OnEdit="OpenEditModal"
+                    OnDelete="ConfirmDelete" />
+
+@* Créer / Modifier  *@
+@if (showModal)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,0.4)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(editing.Id == 0 ? "Nouveau créneau" : "Modifier le créneau")</h5>
+                    <button class="btn-close" @onclick="CloseModal" />
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Cours offert <span class="text-danger">*</span></label>
+                        <select class="form-select" @bind="editing.CoursOffertId">
+                            <option value="0">— Choisir —</option>
+                            @foreach (var co in coursOfferts)
+                            {
+                                <option value="@co.Id">@co.Cours?.Nom — @co.Groupe?.Nom (@co.Enseignant?.NomComplet)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jour <span class="text-danger">*</span></label>
+                        <select class="form-select" @bind="editing.JourSemaine">
+                            @foreach (var (jour, label) in JourLabels)
+                            {
+                                <option value="@jour">@label</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Heure début <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control"
+                                   value="@editing.HeureDebut.ToString("HH:mm")"
+                                   @onchange="e => editing.HeureDebut = TimeOnly.Parse(e.Value!.ToString()!)" />
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Heure fin <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control"
+                                   value="@editing.HeureFin.ToString("HH:mm")"
+                                   @onchange="e => editing.HeureFin = TimeOnly.Parse(e.Value!.ToString()!)" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Salle</label>
+                        <input class="form-control" @bind="editing.Salle" placeholder="ex: A-101" />
+                    </div>
+                    @if (!string.IsNullOrEmpty(modalError))
+                    {
+                        <div class="alert alert-danger py-2">@modalError</div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Annuler</button>
+                    <button class="btn btn-primary"   @onclick="SaveCreneau">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* Confirmation suppression *@
+@if (deletingCreneau is not null)
+{
+    <div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,0.4)">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <p>Supprimer ce créneau ?<br />
+                       <strong>@deletingCreneau.CoursOffert?.Cours?.Nom — @deletingCreneau.JourSemaine</strong></p>
+                    <button class="btn btn-danger me-2" @onclick="DeleteConfirmed">Oui</button>
+                    <button class="btn btn-secondary" @onclick="() => deletingCreneau = null">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Creneau>     allCreneaux  = new();
+    private List<CoursOffert> coursOfferts = new();
+    private int    filterCoursOffertId = 0;
+    private bool   showModal  = false;
+    private string modalError = "";
+    private Creneau  editing       = new();
+    private Creneau? deletingCreneau;
+
+    private static readonly Dictionary<DayOfWeek, string> JourLabels = new()
+    {
+        [DayOfWeek.Monday]    = "Lundi",
+        [DayOfWeek.Tuesday]   = "Mardi",
+        [DayOfWeek.Wednesday] = "Mercredi",
+        [DayOfWeek.Thursday]  = "Jeudi",
+        [DayOfWeek.Friday]    = "Vendredi",
+    };
+
+    private List<Creneau> FilteredCreneaux =>
+        filterCoursOffertId == 0
+            ? allCreneaux
+            : allCreneaux.Where(c => c.CoursOffertId == filterCoursOffertId).ToList();
+
+    protected override async Task OnInitializedAsync() => await LoadData();
+
+    private async Task LoadData()
+    {
+        allCreneaux  = await EdtService.GetAllCreneauxAsync();
+        coursOfferts = await EdtService.GetCoursOffertsAsync();
+    }
+
+    private void OpenCreateModal()
+    {
+        editing = new Creneau
+        {
+            JourSemaine = DayOfWeek.Monday,
+            HeureDebut  = new TimeOnly(8, 30),
+            HeureFin    = new TimeOnly(11, 30)
+        };
+        modalError = "";
+        showModal  = true;
+    }
+
+    private void OpenEditModal(Creneau c)
+    {
+        editing = new Creneau
+        {
+            Id = c.Id, CoursOffertId = c.CoursOffertId,
+            JourSemaine = c.JourSemaine,
+            HeureDebut  = c.HeureDebut, HeureFin = c.HeureFin,
+            Salle = c.Salle
+        };
+        modalError = "";
+        showModal  = true;
+    }
+
+    private void CloseModal() => showModal = false;
+
+    private async Task SaveCreneau()
+    {
+        if (editing.CoursOffertId == 0)       { modalError = "Sélectionnez un cours offert."; return; }
+        if (editing.HeureFin <= editing.HeureDebut) { modalError = "L'heure de fin doit être après l'heure de début."; return; }
+
+        if (editing.Id == 0) await EdtService.CreateCreneauAsync(editing);
+        else                 await EdtService.UpdateCreneauAsync(editing);
+
+        showModal = false;
+        await LoadData();
+    }
+
+    private void ConfirmDelete(Creneau c) => deletingCreneau = c;
+
+    private async Task DeleteConfirmed()
+    {
+        if (deletingCreneau is not null)
+        {
+            await EdtService.DeleteCreneauAsync(deletingCreneau.Id);
+            deletingCreneau = null;
+            await LoadData();
+        }
+    }
+}

@@ -1,0 +1,98 @@
+@* Grile horaire   *@
+@using Skolaris.Models
+
+<div class="edt-grid-wrapper">
+    @{
+        var jours = new[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday,
+                            DayOfWeek.Thursday, DayOfWeek.Friday };
+        var jourLabels = new Dictionary<DayOfWeek, string>
+        {
+            [DayOfWeek.Monday]    = "Lundi",
+            [DayOfWeek.Tuesday]   = "Mardi",
+            [DayOfWeek.Wednesday] = "Mercredi",
+            [DayOfWeek.Thursday]  = "Jeudi",
+            [DayOfWeek.Friday]    = "Vendredi"
+        };
+    }
+
+    @if (!Creneaux.Any())
+    {
+        <div class="alert alert-info">Aucun créneau pour cette semaine.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered edt-table text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width:90px">Heure</th>
+                        @foreach (var j in jours)
+                        {
+                            <th>@jourLabels[j]</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var slot in TimeSlots)
+                    {
+                        <tr>
+                            <td class="text-muted small fw-semibold align-middle">@slot.ToString("HH:mm")</td>
+                            @foreach (var jour in jours)
+                            {
+                                var cr = Creneaux.FirstOrDefault(c =>
+                                    c.JourSemaine == jour &&
+                                    c.HeureDebut <= slot &&
+                                    c.HeureFin   >  slot);
+
+                                <td class="@(cr is not null ? "edt-cell-active" : "edt-cell-empty")" style="min-width:130px">
+                                    @if (cr is not null && cr.HeureDebut == slot)
+                                    {
+                                        <div class="edt-block">
+                                            <strong>@cr.CoursOffert?.Cours?.Nom</strong>
+                                            <div class="text-muted small">@cr.CoursOffert?.Enseignant?.NomComplet</div>
+                                            @if (!string.IsNullOrEmpty(cr.Salle))
+                                            {
+                                                <div class="badge bg-secondary mt-1">Salle: @cr.Salle</div>
+                                            }
+                                            <div class="small text-muted mt-1">
+                                                @cr.HeureDebut.ToString("HH:mm") – @cr.HeureFin.ToString("HH:mm")
+                                            </div>
+                                            @if (ShowAdminActions)
+                                            {
+                                                <div class="mt-1">
+                                                    <button class="btn btn-xs btn-outline-secondary" @onclick="() => OnEdit.InvokeAsync(cr)">Modifier</button>
+                                                    <button class="btn btn-xs btn-outline-danger"    @onclick="() => OnDelete.InvokeAsync(cr)">Supprimer</button>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    .edt-table { font-size: 0.85rem; }
+    .edt-cell-active { background: #EFF6FF; vertical-align: top; padding: 4px; }
+    .edt-cell-empty  { background: #FAFAFA; }
+    .edt-block { background: #DBEAFE; border-left: 3px solid #3B82F6; border-radius: 4px; padding: 6px; text-align:left; }
+    .btn-xs { font-size: 0.7rem; padding: 1px 5px; }
+</style>
+
+@code {
+    [Parameter] public List<Creneau> Creneaux { get; set; } = new();
+    [Parameter] public bool ShowAdminActions { get; set; } = false;
+    [Parameter] public EventCallback<Creneau> OnEdit   { get; set; }
+    [Parameter] public EventCallback<Creneau> OnDelete { get; set; }
+
+    /// Plage horaires de 30 min de 8h à 18h
+    private static readonly List<TimeOnly> TimeSlots = Enumerable
+        .Range(0, 20)
+        .Select(i => new TimeOnly(8, 0).Add(TimeSpan.FromMinutes(i * 30)))
+        .ToList();
+}
