@@ -4,7 +4,7 @@ Module de gestion des horaires et de l'emploi du temps pour la plateforme scolai
 
 ---
 
-## Tickets couverts
+## Tickets 
 
 | Ticket | Description | Heures |
 |--------|-------------|--------|
