@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Skolaris.Services;
 
 namespace Skolaris.Controllers
@@ -37,7 +37,7 @@ namespace Skolaris.Controllers
             var result = _userService.ChangeRole(id, request.Role);
 
             if (!result)
-                return BadRequest("Rôle invalide.");
+                return BadRequest("R�le invalide.");
 
             return Ok();
         }
