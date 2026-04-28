@@ -1,4 +1,4 @@
-﻿namespace Skolaris.Models
+namespace Skolaris.Models
 {
     public class User
     {

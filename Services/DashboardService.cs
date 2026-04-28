@@ -1,4 +1,4 @@
-﻿using Skolaris.Data;
+using Skolaris.Data;
 using Skolaris.ViewModels;
 
 namespace Skolaris.Services

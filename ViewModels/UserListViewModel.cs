@@ -1,4 +1,4 @@
-﻿namespace Skolaris.ViewModels
+namespace Skolaris.ViewModels
 {
     public class UserListViewModel
     {
